@@ -1,4 +1,3 @@
-
 // this is production grade way to show the errors if you didn't understand it don't worry(you can ask chatgpt)
 class ApiError extends Error {
     constructor(
