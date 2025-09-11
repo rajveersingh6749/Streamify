@@ -273,7 +273,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "Current use fetched successfully!"); // It because easy becuase in auth middleware we injected the whole use by writing req.user = user
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully!")); // It because easy becuase in auth middleware we injected the whole use by writing req.user = user
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {

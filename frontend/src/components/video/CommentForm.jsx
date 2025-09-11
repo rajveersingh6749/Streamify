@@ -5,11 +5,20 @@ import Avatar from '../common/Avatar';
 import Button from '../common/Button';
 import toast from 'react-hot-toast';
 
-const CommentForm = ({ videoId, onCommentAdded, parentId = null, onCancel = null }) => {
+const CommentForm = ({ 
+  videoId, 
+  onCommentAdded, 
+  parentId = null, 
+  onCancel = null,
+  initialContent = '',
+  commentId = null,
+  onCommentUpdated = null,
+  isEditing = false
+}) => {
   const { user } = useAuth();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initialContent);
   const [loading, setLoading] = useState(false);
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useState(isEditing);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,20 +31,27 @@ const CommentForm = ({ videoId, onCommentAdded, parentId = null, onCancel = null
     try {
       setLoading(true);
       
-      const response = await commentService.addComment(videoId, content.trim());
+      let response;
+      if (isEditing && commentId) {
+        response = await commentService.updateComment(commentId, content.trim());
+        onCommentUpdated?.(response.data);
+        toast.success('Comment updated successfully');
+      } else {
+        response = await commentService.addComment(videoId, content.trim());
+        onCommentAdded?.(response.data);
+        toast.success('Comment added successfully');
+      }
       
       if (response.success) {
         setContent('');
         setFocused(false);
-        onCommentAdded?.(response.data);
-        toast.success('Comment added successfully');
         
         if (onCancel) {
           onCancel();
         }
       }
     } catch (error) {
-      toast.error('Failed to add comment');
+      toast.error(isEditing ? 'Failed to update comment' : 'Failed to add comment');
     } finally {
       setLoading(false);
     }
@@ -61,7 +77,7 @@ const CommentForm = ({ videoId, onCommentAdded, parentId = null, onCancel = null
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onFocus={() => setFocused(true)}
-            placeholder={parentId ? 'Add a reply...' : 'Add a comment...'}
+            placeholder={isEditing ? 'Edit your comment...' : parentId ? 'Add a reply...' : 'Add a comment...'}
             className="w-full p-3 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
             rows={focused ? 4 : 2}
           />
@@ -84,7 +100,7 @@ const CommentForm = ({ videoId, onCommentAdded, parentId = null, onCancel = null
                 loading={loading}
                 disabled={!content.trim()}
               >
-                {parentId ? 'Reply' : 'Comment'}
+                {isEditing ? 'Update' : parentId ? 'Reply' : 'Comment'}
               </Button>
             </div>
           )}
@@ -93,5 +109,3 @@ const CommentForm = ({ videoId, onCommentAdded, parentId = null, onCancel = null
     </form>
   );
 };
-
-export default CommentForm;
