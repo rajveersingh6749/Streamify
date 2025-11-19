@@ -28,3 +28,4 @@ app.use("/api/v1/users", userRouter)
 // now the url has become https://localhost:8000/api/v1/users/(here will be register or login .....)
 
 export { app }
+export default app
