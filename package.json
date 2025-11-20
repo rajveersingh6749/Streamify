@@ -4,7 +4,8 @@
   "description": "a backend project at chai-aur-code youtube channel",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "start": "node --experimental-json-modules src/index.js"
   },
   "keywords": [
     "javascript",
