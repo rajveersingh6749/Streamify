@@ -1,12 +1,11 @@
-// It is industry grade response if you don't get it don't worry(or you can ask chatgpt)
-
 class ApiResponse {
-    constructor(statusCode, data, messege="Success") {
+    constructor(statusCode, data, message="Success") {
         this.statusCode = statusCode
         this.data = data
-        this.messege = messege
+        this.message = message
         this.success = statusCode < 400
     }
 }
 
 export { ApiResponse }
+export default ApiResponse

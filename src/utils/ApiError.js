@@ -1,16 +1,15 @@
 
-// this is production grade way to show the errors if you didn't understand it don't worry(you can ask chatgpt)
 class ApiError extends Error {
     constructor(
         statusCode,
-        messege = "Something went wrong",
+        message = "Something went wrong",
         errors = [],
         stack = ""
     ) {
-        super(messege)
+        super(message)
         this.statusCode = statusCode
         this.data = null
-        this.messege = messege
+        this.message = message
         this.success = false
         this.errors = errors
 
@@ -22,4 +21,5 @@ class ApiError extends Error {
     }
 }
 
-export {ApiError}
+export { ApiError }
+export default ApiError
