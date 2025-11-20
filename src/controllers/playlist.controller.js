@@ -118,11 +118,8 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(404, "video not found");
     }
 
-    if (
-        (playlist.owner?.toString() && video.owner.toString()) !==
-        req.user?._id.toString()
-    ) {
-        throw new ApiError(400, "only owner can add video to thier playlist");
+    if (playlist.owner?.toString() !== req.user?._id.toString()) {
+        throw new ApiError(400, "only playlist owner can add videos");
     }
 
     const updatedPlaylist = await Playlist.findByIdAndUpdate(
@@ -170,13 +167,10 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(404, "video not found");
     }
 
-    if (
-        (playlist.owner?.toString() && video.owner.toString()) !==
-        req.user?._id.toString()
-    ) {
+    if (playlist.owner?.toString() !== req.user?._id.toString()) {
         throw new ApiError(
-            404,
-            "only owner can remove video from thier playlist"
+            400,
+            "only playlist owner can remove videos"
         );
     }
 

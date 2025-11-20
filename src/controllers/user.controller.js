@@ -47,7 +47,9 @@ const registerUser = asyncHandler(async (req, res) => {
   // console.log("This is how req.body looks like!: ", req.body)
 
   if (
-    [fullName, email, username, password].some((field) => field?.trim() === "") // it is an advanced code of 'if' to check validation of all the fields
+    [fullName, email, username, password].some(
+      (field) => typeof field !== "string" || field.trim() === ""
+    ) // ensure every field exists and contains a non-empty string
   ) {
     throw new ApiError(400, "All fields are required");
   }
@@ -228,7 +230,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const { accessToken, newRefreshToken } =
+    const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
 
     return res
@@ -273,7 +275,9 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "Current use fetched successfully!"); // It because easy becuase in auth middleware we injected the whole use by writing req.user = user
+    .json(
+      new ApiResponse(200, req.user, "Current user fetched successfully")
+    ); // It because easy becuase in auth middleware we injected the whole use by writing req.user = user
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {

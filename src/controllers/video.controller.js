@@ -260,8 +260,8 @@ const getVideoById = asyncHandler(async (req, res) => {
         }
     ]);
 
-    if (!video) {
-        throw new ApiError(500, "failed to fetch video");
+    if (!video?.length) {
+        throw new ApiError(404, "Video not found");
     }
 
     // increment views if video fetched successfully
